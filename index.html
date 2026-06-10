@@ -1665,7 +1665,8 @@ const FinderApp = (() => {
         entries.forEach(n => {
           const tr = el('tr', 'frow' + (state.sel === n.name ? ' selected' : ''));
           const kind = n.type === 'dir' ? 'Folder' : ((n.name.match(/\.([^.]+)$/) || [])[1] || 'Document').toUpperCase() + ' file';
-          const size = n.type === 'dir' ? `${Object.keys(n.children).length} items` : `${(n.content || '').length} B`;
+          const count = n.type === 'dir' ? Object.keys(n.children).length : 0;
+          const size = n.type === 'dir' ? `${count} item${count === 1 ? '' : 's'}` : `${(n.content || '').length} B`;
           tr.innerHTML = `<td><span class="fname">${n.type === 'dir' ? ICONS.folder : ICONS.file}<span class="lab"></span></span></td><td>${escHtml(kind)}</td><td>${escHtml(size)}</td>`;
           tr.querySelector('.lab').textContent = n.name;
           tr.addEventListener('click', e => { e.stopPropagation(); state.sel = n.name; refresh(); });
@@ -2660,9 +2661,6 @@ function launchApp(id, args){
 /* Open a specific window of an app (used by FinderApp.openAt / BrowserApp.open(url)) */
 function launchAppWindow(id, maker){
   const app = APPS[id];
-  if (app.single){
-    /* single-instance apps reuse their window via launchApp */
-  }
   const wasRunning = WM.winsOf(id).length > 0;
   const w = maker();
   if (w){
