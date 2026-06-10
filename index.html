@@ -480,6 +480,18 @@ input[type=range]::-webkit-slider-thumb{
 }
 .st-btn:hover{filter:brightness(1.08)}
 
+/* ---------- Web app windows (live site in an iframe) ---------- */
+.webview-wrap{flex:1;display:flex;position:relative;background:#070912}
+.webview{flex:1;border:none;width:100%;background:#070912}
+.webview-loading{
+  position:absolute;inset:0;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
+  color:#9aa3b8;font-size:13px;background:#070912;
+}
+.spinner{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#6ea8ff;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* while dragging/resizing windows, iframes must not swallow pointer events */
+body.dragging iframe{pointer-events:none}
+
 /* ---------- TextEdit ---------- */
 .textedit{
   flex:1;border:none;outline:none;resize:none;padding:16px 20px;font-size:13.5px;line-height:1.6;
@@ -586,6 +598,7 @@ const ICONS = {
   textedit: `<svg viewBox="0 0 64 64"><rect x="8" y="6" width="48" height="52" rx="8" fill="#fff" stroke="#c9c9d2" stroke-width="1.6"/><g stroke="#9aa3b2" stroke-width="2.4" stroke-linecap="round"><path d="M16 24h32M16 31h32M16 38h32M16 45h20"/></g><path d="M14 13.5c6-4 12 4 18 0s12 4 18 0" fill="none" stroke="#e9304b" stroke-width="2.4" stroke-linecap="round"/></svg>`,
   about: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#3c3c43"/><g transform="translate(15.5,12) scale(0.082)" fill="#fff">${APPLE_PATH}</g></svg>`,
   note: `<svg viewBox="0 0 24 24"><path d="M9.5 17.2V6.6q0-.7.7-.85l8-1.7q1-.2 1 .8v9.6a2.6 2.2 0 11-1.6-2V7.3l-6.5 1.4v10a2.6 2.2 0 11-1.6-2z"/></svg>`,
+  titan: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-ttn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2138"/><stop offset="1" stop-color="#070912"/></linearGradient><linearGradient id="g-ttnb" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#b388ff"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-ttn)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.4"/><g fill="url(#g-ttnb)"><rect x="13" y="37" width="8" height="14" rx="2.4"/><rect x="25" y="30" width="8" height="21" rx="2.4"/><rect x="37" y="22" width="8" height="29" rx="2.4"/></g><path d="M13 29c8-1 11-9 19-11 6.5-1.6 11-2.6 16-3.4" fill="none" stroke="#5ad6a0" stroke-width="3.2" stroke-linecap="round"/><circle cx="49" cy="14.4" r="3.6" fill="#5ad6a0"/></svg>`,
 };
 /* Small monochrome glyphs (menubar, sidebars, toolbars) */
 const GLYPH = {
@@ -609,6 +622,7 @@ const GLYPH = {
   prev: `<svg viewBox="0 0 24 24"><path d="M19 5v14l-9-7zM7.8 5h-2.6v14h2.6z"/></svg>`,
   next: `<svg viewBox="0 0 24 24"><path d="M5 5v14l9-7zM16.2 5h2.6v14h-2.6z"/></svg>`,
   power: `<svg viewBox="0 0 24 24"><path d="M12 3v8M6.2 6.5a8 8 0 1011.6 0"/></svg>`,
+  ext: `<svg viewBox="0 0 16 16"><path d="M6.5 3H4a2 2 0 00-2 2v7a2 2 0 002 2h7a2 2 0 002-2V9.5M10 2h4v4M14 2L7.5 8.5"/></svg>`,
 };
 
 /* ============================================================
