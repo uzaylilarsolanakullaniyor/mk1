@@ -495,6 +495,26 @@ input[type=range]::-webkit-slider-thumb{
 /* while dragging/resizing windows, iframes must not swallow pointer events */
 body.dragging iframe{pointer-events:none}
 
+/* ---------- App Store ---------- */
+.as-main{flex:1;overflow-y:auto;padding:22px 26px;background:var(--content-bg)}
+.as-card{display:flex;align-items:center;gap:14px;padding:13px 15px;border:.5px solid var(--border);border-radius:14px;margin-bottom:11px;background:var(--content-bg2)}
+.as-ico{width:52px;height:52px;flex:none}
+.as-ico svg{width:100%;height:100%}
+.as-info{flex:1;min-width:0}
+.as-info b{display:block;font-size:14px}
+.as-info i{display:block;font-style:normal;font-size:11px;color:var(--text-sec);margin:1px 0 3px}
+.as-info p{font-size:12px;color:var(--text-sec);line-height:1.35}
+.as-right{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none}
+.as-btn{
+  min-width:72px;height:27px;border-radius:14px;background:var(--accent-soft);color:var(--accent);
+  font-weight:800;font-size:12px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;
+}
+.as-btn:hover{background:var(--accent);color:#fff}
+.as-btn:disabled{pointer-events:none}
+.as-un{font-size:11px;color:var(--text-sec)}
+.as-un:hover{text-decoration:underline;color:#ff453a}
+.spinner-sm{width:14px;height:14px;border-width:2.5px;border-color:rgba(127,127,127,.3);border-top-color:var(--accent)}
+
 /* ---------- TextEdit ---------- */
 .textedit{
   flex:1;border:none;outline:none;resize:none;padding:16px 20px;font-size:13.5px;line-height:1.6;
@@ -603,8 +623,8 @@ const ICONS = {
   note: `<svg viewBox="0 0 24 24"><path d="M9.5 17.2V6.6q0-.7.7-.85l8-1.7q1-.2 1 .8v9.6a2.6 2.2 0 11-1.6-2V7.3l-6.5 1.4v10a2.6 2.2 0 11-1.6-2z"/></svg>`,
   titan: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-ttn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2138"/><stop offset="1" stop-color="#070912"/></linearGradient><linearGradient id="g-ttnb" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#b388ff"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-ttn)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.4"/><g fill="url(#g-ttnb)"><rect x="13" y="37" width="8" height="14" rx="2.4"/><rect x="25" y="30" width="8" height="21" rx="2.4"/><rect x="37" y="22" width="8" height="29" rx="2.4"/></g><path d="M13 29c8-1 11-9 19-11 6.5-1.6 11-2.6 16-3.4" fill="none" stroke="#5ad6a0" stroke-width="3.2" stroke-linecap="round"/><circle cx="49" cy="14.4" r="3.6" fill="#5ad6a0"/></svg>`,
   btccycle: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-btc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2230"/><stop offset="1" stop-color="#0b0e11"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-btc)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><circle cx="32" cy="27" r="13.5" fill="#f7931a"/><text x="32" y="33.5" font-size="18" font-weight="800" text-anchor="middle" fill="#fff" font-family="-apple-system,Arial,sans-serif">&#8383;</text><path d="M11 51c5-9 9 4 14-3s8-11 12-4 8 9 16 1" fill="none" stroke="#26a69a" stroke-width="3" stroke-linecap="round"/></svg>`,
-  saylor: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-syl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#161c2c"/><stop offset="1" stop-color="#080b13"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-syl)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><g stroke="#2ecc71" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M12 46L28 30"/><path d="M19.5 30H28v8.5"/></g><g stroke="#ff4466" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M36 18l16 16"/><path d="M52 25.5V34h-8.5"/></g><circle cx="22" cy="17" r="2.6" fill="#ff9f43"/><circle cx="30" cy="17" r="2.6" fill="#ff9f43"/></svg>`,
   cointerminal: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-ctm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1322"/><stop offset="1" stop-color="#04060c"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-ctm)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><path d="M32 13l14 19-14 19-14-19z" fill="none" stroke="#00ff88" stroke-width="6.5" opacity=".22"/><path d="M32 13l14 19-14 19-14-19z" fill="none" stroke="#00ff88" stroke-width="3"/><path d="M32 24l6 8-6 8-6-8z" fill="#00ff88"/></svg>`,
+  appstore: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-aps" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2fb3f7"/><stop offset="1" stop-color="#1464e8"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-aps)"/><g stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 45l11.5-25L44 45"/><path d="M25.8 35.5h13.4"/></g></svg>`,
 };
 /* Small monochrome glyphs (menubar, sidebars, toolbars) */
 const GLYPH = {
@@ -1052,7 +1072,7 @@ const WM = (() => {
    8. DOCK
    ============================================================ */
 const Dock = (() => {
-  const SYSTEM = ['finder','terminal','safari','music','settings'];
+  const SYSTEM = ['finder','terminal','safari','appstore','music','settings'];
   let PINNED = SYSTEM.slice();
   let userPins = []; // user-pinned apps (drag a desktop icon onto the Dock), persisted
   const dock = $('#dock');
@@ -1204,7 +1224,7 @@ const MenuBar = (() => {
         { label:'About This Mac', action:() => launchApp('about') },
         '-',
         { label:'System Settings…', action:() => launchApp('settings') },
-        { label:'App Store…', action:() => notify('App Store', 'The App Store is imaginary in this simulation.', ICONS.about) },
+        { label:'App Store…', action:() => launchApp('appstore') },
         '-',
         { label:'Sleep', action:sleep },
         { label:'Restart…', action:() => location.reload() },
@@ -1388,6 +1408,7 @@ const Desktop = (() => {
     { id:'app:terminal', app:'terminal' },
     { id:'app:safari',   app:'safari' },
     { id:'app:music',    app:'music' },
+    { id:'app:appstore', app:'appstore' },
   ];
   let positions = loadLS('mkos.iconpos', {});
   let selected = null;
@@ -1396,8 +1417,8 @@ const Desktop = (() => {
   const dtPath = HOME + '/Desktop';
 
   function items(){
-    /* app shortcuts + the user's web apps marked onDesktop (resolved lazily — WEB_APPS is defined below) */
-    const shortcuts = SHORTCUTS.concat(WEB_APPS.filter(d => d.onDesktop).map(d => ({ id:'app:' + d.id, app:d.id })));
+    /* app shortcuts + installed web apps (resolved lazily — WEB_APPS is defined below) */
+    const shortcuts = SHORTCUTS.concat(WEB_APPS.filter(d => isInstalled(d.id)).map(d => ({ id:'app:' + d.id, app:d.id })));
     const out = shortcuts.map(s => ({ id:s.id, name:APPS[s.app].name, icon:APPS[s.app].icon, kind:'app', app:s.app }));
     const node = FS.get(dtPath);
     if (node){
@@ -1473,6 +1494,8 @@ const Desktop = (() => {
             menu.push('-', { label:'Remove from Dock', action:() => Dock.unpin(it.app) });
           else if (!Dock.isPinned(it.app))
             menu.push('-', { label:'Add to Dock', action:() => Dock.pin(it.app) });
+          if (WEB_APPS.some(d => d.id === it.app))
+            menu.push({ label:'Uninstall…', danger:true, action:() => uninstallApp(it.app) });
         }
         if (it.kind !== 'app'){
           menu.push('-',
@@ -2714,16 +2737,39 @@ const AboutApp = (() => {
 })();
 
 /* ---------- Web apps — the user's live Vercel sites, each in its own window ----------
-   id        : app id (dock / desktop / window manager)
-   icon      : key in ICONS
-   onDesktop : show a desktop shortcut
-   The Dock only shows system apps by default — drag a desktop icon onto the Dock
-   to pin an app there (persisted), right-click its Dock icon to remove it.        */
+   This is the App Store catalog. Installing an app (GET) puts its shortcut on the
+   desktop; from there it can be dragged onto the Dock to pin it. Installed apps
+   are persisted in localStorage ('mkos.installed').                               */
 const WEB_APPS = [
-  { id:'titanstats',   name:'Titan Stats',        icon:'titan',        url:'https://titan-stats.vercel.app/',       winTitle:'Titan PreStocks · Hacim Analizi',   onDesktop:true },
-  { id:'btccycle',     name:'BTC Cycle',          icon:'btccycle',     url:'https://btc-cycle-tracker.vercel.app/', winTitle:'BTC Cycle Forecast',                onDesktop:true },
-  { id:'cointerminal', name:'Coin Terminal',      icon:'cointerminal', url:'https://coin-terminal.vercel.app/',     winTitle:'◈ COIN TERMINAL',                   onDesktop:true },
+  { id:'titanstats',   name:'Titan Stats',        icon:'titan',        url:'https://titan-stats.vercel.app/',       winTitle:'Titan PreStocks · Hacim Analizi',
+    desc:'Live volume analytics for Titan PreStocks tokens.' },
+  { id:'btccycle',     name:'BTC Cycle',          icon:'btccycle',     url:'https://btc-cycle-tracker.vercel.app/', winTitle:'BTC Cycle Forecast',
+    desc:'Bitcoin cycle forecast with halving-based projections.' },
+  { id:'cointerminal', name:'Coin Terminal',      icon:'cointerminal', url:'https://coin-terminal.vercel.app/',     winTitle:'◈ COIN TERMINAL',
+    desc:'A retro terminal-style crypto market dashboard.' },
 ];
+
+/* ---------- install state (drives which web apps appear on the desktop) ---------- */
+/* nothing is installed by default — the user installs apps from the App Store */
+let installedApps = loadLS('mkos.installed', [])
+  .filter(id => WEB_APPS.some(d => d.id === id));
+function isInstalled(id){ return installedApps.includes(id); }
+function installApp(id){
+  if (isInstalled(id) || !APPS[id]) return;
+  installedApps.push(id);
+  store('mkos.installed', installedApps);
+  Desktop.render();
+  notify('App Store', `${APPS[id].name} installed — its icon is on the desktop.`, APPS[id].icon);
+}
+function uninstallApp(id){
+  if (!isInstalled(id)) return;
+  installedApps = installedApps.filter(x => x !== id);
+  store('mkos.installed', installedApps);
+  WM.closeAllOf(id);
+  if (Dock.isUserPin(id)) Dock.unpin(id);
+  Desktop.render();
+  notify('App Store', `${APPS[id].name} uninstalled.`, APPS[id].icon);
+}
 function makeWebAppOpener(def){
   return function(){
     const wrap = el('div', 'webview-wrap');
@@ -2751,6 +2797,61 @@ function makeWebAppOpener(def){
   };
 }
 
+/* ---------- App Store — install / open / uninstall the user's web apps ---------- */
+const AppStoreApp = (() => {
+  let mainEl = null;
+  const installing = new Set();
+
+  function card(d){
+    const c = el('div', 'as-card');
+    c.innerHTML = `<span class="as-ico">${ICONS[d.icon]}</span>
+      <span class="as-info"><b></b><i>Web App</i><p></p></span>`;
+    c.querySelector('b').textContent = d.name;
+    c.querySelector('p').textContent = d.desc || '';
+    const right = el('div', 'as-right');
+    const btn = el('button', 'as-btn');
+    right.append(btn);
+    if (installing.has(d.id)){
+      btn.innerHTML = '<span class="spinner spinner-sm"></span>';
+      btn.disabled = true;
+    } else if (isInstalled(d.id)){
+      btn.textContent = 'OPEN';
+      btn.addEventListener('click', () => launchApp(d.id));
+      const un = el('button', 'as-un', 'Uninstall');
+      un.addEventListener('click', () => { uninstallApp(d.id); render(); });
+      right.append(un);
+    } else {
+      btn.textContent = 'GET';
+      btn.addEventListener('click', () => {
+        Sfx.click();
+        installing.add(d.id);
+        render();
+        setTimeout(() => { installing.delete(d.id); installApp(d.id); render(); }, 1200 + Math.random() * 900);
+      });
+    }
+    c.append(right);
+    return c;
+  }
+
+  function render(){
+    if (!mainEl) return;
+    mainEl.innerHTML = '';
+    WEB_APPS.forEach(d => mainEl.append(card(d)));
+  }
+
+  function open(){
+    const main = el('div', 'as-main');
+    mainEl = main;
+    const win = WM.create({
+      app:'appstore', title:'App Store', width:620, height:540, minW:460, minH:340, content:main,
+      onClose:() => { mainEl = null; },
+    });
+    render();
+    return win;
+  }
+  return { open };
+})();
+
 /* ============================================================
    18. APP REGISTRY & LAUNCHING
    ============================================================ */
@@ -2760,6 +2861,7 @@ const APPS = {
   safari:   { name:'Safari',          icon:ICONS.safari,   single:true, launch:() => BrowserApp.open() },
   music:    { name:'Music',           icon:ICONS.music,    single:true, launch:() => MusicApp.open() },
   settings: { name:'System Settings', icon:ICONS.settings, single:true, launch:a => SettingsApp.open(a && a.pane) },
+  appstore: { name:'App Store',       icon:ICONS.appstore, single:true, launch:() => AppStoreApp.open() },
   textedit: { name:'TextEdit',        icon:ICONS.textedit, launch:() => null },
   about:    { name:'About This Mac',  icon:ICONS.about,    single:true, launch:() => AboutApp.open() },
 };
