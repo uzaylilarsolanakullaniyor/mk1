@@ -242,6 +242,7 @@ body.dark .window:not(.focused) .tl{background:#5a5a60}
 }
 .dock-item.running::after{opacity:.55}
 .dock-sep{width:1px;align-self:stretch;margin:6px 5px;background:var(--border)}
+#dock.drop-target{outline:2px solid var(--accent);outline-offset:3px;background:var(--accent-soft)}
 #dock-dyn{display:flex;align-items:flex-end}
 #dock-dyn:not(:empty){border-right:1px solid var(--border);margin-right:4px;padding-right:4px}
 #dock-label{
@@ -601,6 +602,9 @@ const ICONS = {
   about: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#3c3c43"/><g transform="translate(15.5,12) scale(0.082)" fill="#fff">${APPLE_PATH}</g></svg>`,
   note: `<svg viewBox="0 0 24 24"><path d="M9.5 17.2V6.6q0-.7.7-.85l8-1.7q1-.2 1 .8v9.6a2.6 2.2 0 11-1.6-2V7.3l-6.5 1.4v10a2.6 2.2 0 11-1.6-2z"/></svg>`,
   titan: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-ttn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2138"/><stop offset="1" stop-color="#070912"/></linearGradient><linearGradient id="g-ttnb" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#b388ff"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-ttn)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.4"/><g fill="url(#g-ttnb)"><rect x="13" y="37" width="8" height="14" rx="2.4"/><rect x="25" y="30" width="8" height="21" rx="2.4"/><rect x="37" y="22" width="8" height="29" rx="2.4"/></g><path d="M13 29c8-1 11-9 19-11 6.5-1.6 11-2.6 16-3.4" fill="none" stroke="#5ad6a0" stroke-width="3.2" stroke-linecap="round"/><circle cx="49" cy="14.4" r="3.6" fill="#5ad6a0"/></svg>`,
+  btccycle: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-btc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2230"/><stop offset="1" stop-color="#0b0e11"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-btc)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><circle cx="32" cy="27" r="13.5" fill="#f7931a"/><text x="32" y="33.5" font-size="18" font-weight="800" text-anchor="middle" fill="#fff" font-family="-apple-system,Arial,sans-serif">&#8383;</text><path d="M11 51c5-9 9 4 14-3s8-11 12-4 8 9 16 1" fill="none" stroke="#26a69a" stroke-width="3" stroke-linecap="round"/></svg>`,
+  saylor: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-syl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#161c2c"/><stop offset="1" stop-color="#080b13"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-syl)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><g stroke="#2ecc71" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M12 46L28 30"/><path d="M19.5 30H28v8.5"/></g><g stroke="#ff4466" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M36 18l16 16"/><path d="M52 25.5V34h-8.5"/></g><circle cx="22" cy="17" r="2.6" fill="#ff9f43"/><circle cx="30" cy="17" r="2.6" fill="#ff9f43"/></svg>`,
+  cointerminal: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-ctm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1322"/><stop offset="1" stop-color="#04060c"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-ctm)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><path d="M32 13l14 19-14 19-14-19z" fill="none" stroke="#00ff88" stroke-width="6.5" opacity=".22"/><path d="M32 13l14 19-14 19-14-19z" fill="none" stroke="#00ff88" stroke-width="3"/><path d="M32 24l6 8-6 8-6-8z" fill="#00ff88"/></svg>`,
 };
 /* Small monochrome glyphs (menubar, sidebars, toolbars) */
 const GLYPH = {
@@ -1048,17 +1052,28 @@ const WM = (() => {
    8. DOCK
    ============================================================ */
 const Dock = (() => {
-  const PINNED = ['finder','terminal','safari','music','settings'];
+  const SYSTEM = ['finder','terminal','safari','music','settings'];
+  let PINNED = SYSTEM.slice();
+  let userPins = []; // user-pinned apps (drag a desktop icon onto the Dock), persisted
   const dock = $('#dock');
   const label = $('#dock-label');
-  let dyn = null, trashItem = null;
+  let dyn = null, trashItem = null, sepEl = null;
   const items = new Map(); // appId -> element
 
   function makeItem(id, name, icon, onClick){
     const it = el('button', 'dock-item');
     it.dataset.app = id;
     it.innerHTML = `<span class="dock-icon">${icon}</span>`;
-    it.addEventListener('click', () => { Sfx.click(); onClick(); });
+    /* pointerup instead of click: while icons magnify they also shift sideways, so
+       mousedown/mouseup can land on different elements and "click" never fires */
+    it.addEventListener('pointerup', e => { if (e.button !== 0) return; Sfx.click(); onClick(); });
+    it.addEventListener('contextmenu', e => {
+      e.preventDefault(); e.stopPropagation();
+      const menu = [{ label:'Open', action:onClick }];
+      if (userPins.includes(id))
+        menu.push('-', { label:'Remove from Dock', danger:true, action:() => unpin(id) });
+      CtxMenu.show(e.clientX, e.clientY, menu);
+    });
     it.addEventListener('mouseenter', () => {
       const r = it.getBoundingClientRect();
       label.textContent = name;
@@ -1071,12 +1086,16 @@ const Dock = (() => {
   }
 
   function build(){
+    /* restore the user's own Dock pins (APPS is defined by init time) */
+    userPins = loadLS('mkos.dockpins', []).filter(id => APPS[id] && !SYSTEM.includes(id));
+    PINNED = SYSTEM.concat(userPins);
     PINNED.forEach(id => {
       const it = makeItem(id, APPS[id].name, APPS[id].icon, () => handleClick(id));
       items.set(id, it);
       dock.append(it);
     });
-    dock.append(el('div', 'dock-sep'));
+    sepEl = el('div', 'dock-sep');
+    dock.append(sepEl);
     dyn = el('div', '');
     dyn.id = 'dock-dyn';
     dock.append(dyn);
@@ -1137,7 +1156,38 @@ const Dock = (() => {
   }
   function height(){ return $('#dock-wrap').getBoundingClientRect().height; }
 
-  return { build, update, iconRectFor, bounce, height };
+  /* ---- user pinning (drag a desktop app icon onto the Dock) ---- */
+  function pin(id){
+    if (!APPS[id] || PINNED.includes(id)) return;
+    const it = makeItem(id, APPS[id].name, APPS[id].icon, () => handleClick(id));
+    items.set(id, it);
+    dock.insertBefore(it, sepEl);
+    PINNED.push(id);
+    userPins.push(id);
+    store('mkos.dockpins', userPins);
+    update();
+    bounce(id);
+    notify(APPS[id].name, 'Added to the Dock.', APPS[id].icon);
+  }
+  function unpin(id){
+    if (!userPins.includes(id)) return;
+    userPins = userPins.filter(x => x !== id);
+    PINNED = PINNED.filter(x => x !== id);
+    store('mkos.dockpins', userPins);
+    const it = items.get(id);
+    if (it){ it.remove(); items.delete(id); }
+    update(); // if the app is still running it reappears in the dynamic section
+    notify(APPS[id].name, 'Removed from the Dock.', APPS[id].icon);
+  }
+  /* is (x,y) over the Dock? — used as the drop target test for desktop icons */
+  function hitTest(x, y){
+    const r = dock.getBoundingClientRect();
+    return x >= r.left - 10 && x <= r.right + 10 && y >= r.top - 12;
+  }
+
+  return { build, update, iconRectFor, bounce, height, pin, unpin, hitTest,
+           isPinned: id => PINNED.includes(id),
+           isUserPin: id => userPins.includes(id) };
 })();
 
 /* ============================================================
@@ -1335,10 +1385,9 @@ function startRename(labelEl, oldName, onCommit){
 const Desktop = (() => {
   const root = $('#desktop');
   const SHORTCUTS = [
-    { id:'app:terminal',   app:'terminal' },
-    { id:'app:safari',     app:'safari' },
-    { id:'app:music',      app:'music' },
-    { id:'app:titanstats', app:'titanstats' },
+    { id:'app:terminal', app:'terminal' },
+    { id:'app:safari',   app:'safari' },
+    { id:'app:music',    app:'music' },
   ];
   let positions = loadLS('mkos.iconpos', {});
   let selected = null;
@@ -1347,7 +1396,9 @@ const Desktop = (() => {
   const dtPath = HOME + '/Desktop';
 
   function items(){
-    const out = SHORTCUTS.map(s => ({ id:s.id, name:APPS[s.app].name, icon:APPS[s.app].icon, kind:'app', app:s.app }));
+    /* app shortcuts + the user's web apps marked onDesktop (resolved lazily — WEB_APPS is defined below) */
+    const shortcuts = SHORTCUTS.concat(WEB_APPS.filter(d => d.onDesktop).map(d => ({ id:'app:' + d.id, app:d.id })));
+    const out = shortcuts.map(s => ({ id:s.id, name:APPS[s.app].name, icon:APPS[s.app].icon, kind:'app', app:s.app }));
     const node = FS.get(dtPath);
     if (node){
       Object.values(node.children)
@@ -1391,13 +1442,23 @@ const Desktop = (() => {
           moved = true;
           d.style.left = clamp(ol + m.clientX - sx, 0, root.clientWidth - 88) + 'px';
           d.style.top = clamp(ot + m.clientY - sy, 0, root.clientHeight - 100) + 'px';
+          /* highlight the Dock while an app icon hovers over it */
+          if (it.kind === 'app')
+            $('#dock').classList.toggle('drop-target', Dock.hitTest(m.clientX, m.clientY) && !Dock.isPinned(it.app));
         };
-        const up = () => {
+        const up = m => {
           removeEventListener('pointermove', mv); removeEventListener('pointerup', up);
-          if (moved){
-            positions[it.id] = { x: d.offsetLeft, y: d.offsetTop };
-            store('mkos.iconpos', positions);
+          $('#dock').classList.remove('drop-target');
+          if (!moved) return;
+          /* dropping an app shortcut on the Dock pins it; the shortcut snaps back to its place */
+          if (it.kind === 'app' && Dock.hitTest(m.clientX, m.clientY)){
+            d.style.left = ol + 'px';
+            d.style.top = ot + 'px';
+            Dock.pin(it.app);
+            return;
           }
+          positions[it.id] = { x: d.offsetLeft, y: d.offsetTop };
+          store('mkos.iconpos', positions);
         };
         addEventListener('pointermove', mv);
         addEventListener('pointerup', up);
@@ -1407,6 +1468,12 @@ const Desktop = (() => {
         e.preventDefault(); e.stopPropagation();
         select(it.id, d);
         const menu = [{ label:'Open', action:() => openItem(it) }];
+        if (it.kind === 'app'){
+          if (Dock.isUserPin(it.app))
+            menu.push('-', { label:'Remove from Dock', action:() => Dock.unpin(it.app) });
+          else if (!Dock.isPinned(it.app))
+            menu.push('-', { label:'Add to Dock', action:() => Dock.pin(it.app) });
+        }
         if (it.kind !== 'app'){
           menu.push('-',
             { label:'Rename', action:() => beginRename(d, it) },
@@ -2646,34 +2713,44 @@ const AboutApp = (() => {
   return { open };
 })();
 
-/* ---------- Titan Stats — live site (titan-stats.vercel.app) in a window ---------- */
-const TitanApp = (() => {
-  const SITE = 'https://titan-stats.vercel.app/';
-  function open(){
+/* ---------- Web apps — the user's live Vercel sites, each in its own window ----------
+   id        : app id (dock / desktop / window manager)
+   icon      : key in ICONS
+   onDesktop : show a desktop shortcut
+   The Dock only shows system apps by default — drag a desktop icon onto the Dock
+   to pin an app there (persisted), right-click its Dock icon to remove it.        */
+const WEB_APPS = [
+  { id:'titanstats',   name:'Titan Stats',        icon:'titan',        url:'https://titan-stats.vercel.app/',       winTitle:'Titan PreStocks · Hacim Analizi',   onDesktop:true },
+  { id:'btccycle',     name:'BTC Cycle',          icon:'btccycle',     url:'https://btc-cycle-tracker.vercel.app/', winTitle:'BTC Cycle Forecast',                onDesktop:true },
+  { id:'saylor',       name:'In Saylor We Trust', icon:'saylor',       url:'https://in-saylor-we-trust.vercel.app/',winTitle:'In Saylor We Trust — Bull or Bear?',onDesktop:true },
+  { id:'cointerminal', name:'Coin Terminal',      icon:'cointerminal', url:'https://coin-terminal.vercel.app/',     winTitle:'◈ COIN TERMINAL',                   onDesktop:true },
+];
+function makeWebAppOpener(def){
+  return function(){
     const wrap = el('div', 'webview-wrap');
     const frame = el('iframe', 'webview');
-    frame.src = SITE;
+    frame.src = def.url;
     const loading = el('div', 'webview-loading',
-      '<div class="spinner"></div><span>titan-stats.vercel.app yükleniyor…</span>');
+      `<div class="spinner"></div><span>${escHtml(new URL(def.url).hostname)} yükleniyor…</span>`);
     frame.addEventListener('load', () => loading.remove());
     wrap.append(frame, loading);
 
     const toolbar = el('div', '');
     toolbar.style.cssText = 'display:flex;align-items:center;gap:6px;flex:1;min-width:0';
-    const title = el('div', 'tb-title', 'Titan PreStocks · Hacim Analizi');
+    const title = el('div', 'tb-title');
+    title.textContent = def.winTitle || def.name;
     const sp = el('div', 'tb-spacer');
     const bRel = el('button', 'tb-btn', GLYPH.reload);
     bRel.title = 'Yenile';
-    bRel.addEventListener('click', () => { wrap.append(loading); frame.src = SITE; });
+    bRel.addEventListener('click', () => { wrap.append(loading); frame.src = def.url; });
     const bExt = el('button', 'tb-btn', GLYPH.ext);
     bExt.title = 'Gerçek tarayıcıda aç';
-    bExt.addEventListener('click', () => window.open(SITE, '_blank'));
+    bExt.addEventListener('click', () => window.open(def.url, '_blank'));
     toolbar.append(title, sp, bRel, bExt);
 
-    return WM.create({ app:'titanstats', title:'Titan Stats', width:980, height:640, minW:420, minH:320, toolbar, content:wrap });
-  }
-  return { open };
-})();
+    return WM.create({ app:def.id, title:def.name, width:980, height:640, minW:420, minH:320, toolbar, content:wrap });
+  };
+}
 
 /* ============================================================
    18. APP REGISTRY & LAUNCHING
@@ -2684,10 +2761,13 @@ const APPS = {
   safari:   { name:'Safari',          icon:ICONS.safari,   single:true, launch:() => BrowserApp.open() },
   music:    { name:'Music',           icon:ICONS.music,    single:true, launch:() => MusicApp.open() },
   settings: { name:'System Settings', icon:ICONS.settings, single:true, launch:a => SettingsApp.open(a && a.pane) },
-  titanstats:{ name:'Titan Stats',    icon:ICONS.titan,    single:true, launch:() => TitanApp.open() },
   textedit: { name:'TextEdit',        icon:ICONS.textedit, launch:() => null },
   about:    { name:'About This Mac',  icon:ICONS.about,    single:true, launch:() => AboutApp.open() },
 };
+/* register the user's live web apps */
+WEB_APPS.forEach(d => {
+  APPS[d.id] = { name:d.name, icon:ICONS[d.icon], single:true, launch:makeWebAppOpener(d) };
+});
 
 function launchApp(id, args){
   const app = APPS[id];
