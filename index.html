@@ -625,6 +625,7 @@ const ICONS = {
   btccycle: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-btc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2230"/><stop offset="1" stop-color="#0b0e11"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-btc)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><circle cx="32" cy="27" r="13.5" fill="#f7931a"/><text x="32" y="33.5" font-size="18" font-weight="800" text-anchor="middle" fill="#fff" font-family="-apple-system,Arial,sans-serif">&#8383;</text><path d="M11 51c5-9 9 4 14-3s8-11 12-4 8 9 16 1" fill="none" stroke="#26a69a" stroke-width="3" stroke-linecap="round"/></svg>`,
   cointerminal: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-ctm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1322"/><stop offset="1" stop-color="#04060c"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-ctm)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><path d="M32 13l14 19-14 19-14-19z" fill="none" stroke="#00ff88" stroke-width="6.5" opacity=".22"/><path d="M32 13l14 19-14 19-14-19z" fill="none" stroke="#00ff88" stroke-width="3"/><path d="M32 24l6 8-6 8-6-8z" fill="#00ff88"/></svg>`,
   appstore: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-aps" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2fb3f7"/><stop offset="1" stop-color="#1464e8"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-aps)"/><g stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 45l11.5-25L44 45"/><path d="M25.8 35.5h13.4"/></g></svg>`,
+  xstocks: `<svg viewBox="0 0 64 64"><defs><linearGradient id="g-xst" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#131a2b"/><stop offset="1" stop-color="#070b14"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g-xst)"/><rect x="3" y="3" width="58" height="58" rx="13.2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/><path d="M15 46L49 18" stroke="#34d399" stroke-width="5.5" stroke-linecap="round"/><path d="M15 18l34 28" stroke="#f472b6" stroke-width="5.5" stroke-linecap="round"/><circle cx="32" cy="32" r="4.6" fill="#070b14" stroke="#94a3b8" stroke-width="2"/></svg>`,
 };
 /* Small monochrome glyphs (menubar, sidebars, toolbars) */
 const GLYPH = {
@@ -2747,6 +2748,8 @@ const WEB_APPS = [
     desc:'Bitcoin cycle forecast with halving-based projections.' },
   { id:'cointerminal', name:'Coin Terminal',      icon:'cointerminal', url:'https://coin-terminal.vercel.app/',     winTitle:'◈ COIN TERMINAL',
     desc:'A retro terminal-style crypto market dashboard.' },
+  { id:'xstocks',      name:'xStocks Panel',      icon:'xstocks',      url:'https://xstocks-dashboard-ruby.vercel.app/', winTitle:'xStocks Panel',
+    desc:'xPoints dashboard for the xStocks ecosystem.' },
 ];
 
 /* ---------- install state (drives which web apps appear on the desktop) ---------- */
